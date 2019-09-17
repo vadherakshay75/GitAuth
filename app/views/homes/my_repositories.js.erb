@@ -1,0 +1,17 @@
+$.ajax({
+  type: "GET",
+  url: "<%= current_user.repos_url %>",
+  dataType: 'json',
+  success: function(responce) {
+    $('#repos').empty();
+    $('#repos').append("<table border=2><tr id='test'><th>Repository name</th><th>Language</th><th>Last Pushed</th><th>Last modified</th><th>Repository Url</th></tr></table>");
+    $.each(responce, function (key, value) {
+      $("<tr id='tr'>").insertAfter('#test');
+      $('#tr').append('<td>'+ value.name +'</td>');
+      $('#tr').append('<td>'+ value.language +'</td>');
+      $('#tr').append('<td>'+ value.pushed_at +'</td>');
+      $('#tr').append('<td>'+ value.updated_at +'</td>');
+      $('#tr').append("<td><a href="+ value.svn_url + " target='_blank'>Click here</a></td></tr>");
+    });
+  }
+});

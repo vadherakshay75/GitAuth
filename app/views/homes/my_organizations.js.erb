@@ -1,0 +1,36 @@
+$.ajax({
+  type: "GET",
+  url: "<%= current_user.organizations_url %>",
+  dataType: 'json',
+  success: function(responce) {
+    console.log(responce);
+    $('#repos').empty();
+    $('#repos').append("<table border=2><tr id='test'><th>Organization name</th><th>Organization Profile</th><th>Location</th><th>Members</th></tr></table>");
+    $.each(responce, function (key, value) {
+      $("<tr id='tr'>").insertAfter('#test');
+      $('#tr').append('<td>'+ value.login +'</td>');
+      $('#tr').append("<td><a href=https://github.com/orgs/"+ value.login + " target='_blank'>Click here</a></td></tr>");
+      $.ajax({
+        type: "GET",
+        url: value.url,
+        dataType: 'json',
+        success: function(respo){
+          $('#tr').append('<td>'+ respo.location +'</td>');
+          $.ajax({
+            type: "GET",
+            url: 'https://api.github.com/orgs/'+ respo.login+ '/members',
+            dataType: 'json',
+            success: function(res){
+              $('#tr').append("<table border=2><tr id='test2'><th>Member name</th><th>Profile</th></tr></table>");
+              $.each(res, function (key, value) {
+                $("<tr id='tr2'>").insertAfter('#test2');
+                $('#tr2').append('<td>'+ value.login +'</td>');
+                $('#tr2').append("<td><a href="+ value.html_url + " target='_blank'>Click here</a></td></tr>");
+              });
+            }
+          });
+        }
+      });
+    });
+  }
+});
